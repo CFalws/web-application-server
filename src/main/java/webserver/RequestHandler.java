@@ -1,10 +1,9 @@
 package webserver;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +23,39 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
+            String path = getPath(in);
+            byte[] body = getBytes(path);
             response200Header(dos, body.length);
             responseBody(dos, body);
         } catch (IOException e) {
             log.error(e.getMessage());
+        }
+    }
+
+    private String getPath(InputStream in) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        try {
+            String[] header = new String[0];
+            if (reader.ready())
+                header = reader.readLine().split(" ");
+            if (header.length < 2 || !Objects.equals(header[1].substring(0, 1), "/"))
+                throw new IllegalArgumentException();
+            return header[1];
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private byte[] getBytes(String path) {
+        if (path.equals("/")) {
+            return "hello world".getBytes();
+        }
+        try {
+            return Files.readAllBytes(new File("./webapp" + path).toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
