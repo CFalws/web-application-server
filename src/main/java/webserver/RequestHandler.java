@@ -3,15 +3,23 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.Objects;
+import java.util.Map;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestParser;
+import util.HttpRequestUtils;
+import util.IOUtils;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String DEFAULT_PATH = "/index.html";
+    private static final String REDIRECT_LOCATION = "http://localhost:8080/index.html";
 
     private Socket connection;
+
+    private String body;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -25,27 +33,33 @@ public class RequestHandler extends Thread {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
             DataOutputStream dos = new DataOutputStream(out);
-            String path = getPath(in);
-            byte[] body = getBytes(path);
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String path = HttpRequestParser.path(br);
+            switch (path) {
+                case "/user/create": createUser(br); makeResp(DEFAULT_PATH, 302, dos); break;
+                default: makeResp(path, 200, dos); break;
+            }
+
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private String getPath(InputStream in) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+    private void createUser(BufferedReader br) {
         try {
-            String[] header = new String[0];
-            if (reader.ready())
-                header = reader.readLine().split(" ");
-            if (header.length < 2 || !Objects.equals(header[1].substring(0, 1), "/"))
-                throw new IllegalArgumentException();
-            return header[1];
+            String body = HttpRequestParser.body(br);
+            Map<String, String> info = HttpRequestUtils.parseQueryString(body);
+            User user = new User(info.get("userId"), info.get("password"), info.get("name"), info.get("email"));
+            log.debug(user.getUserId() + "made");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void makeResp(String path, int statusCode, DataOutputStream dos) {
+        byte[] body = getBytes(path);
+        responseHeader(dos, body.length, statusCode);
+        responseBody(dos, body);
     }
 
     private byte[] getBytes(String path) {
@@ -59,9 +73,23 @@ public class RequestHandler extends Thread {
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private void response200Header(DataOutputStream dos) throws IOException {
+
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+    }
+
+    private void response302Header(DataOutputStream dos) throws IOException {
+        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+        dos.writeBytes("Location: " + REDIRECT_LOCATION + "\r\n");
+    }
+
+    private void responseHeader(DataOutputStream dos, int lengthOfBodyContent, int statusCode) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
+            switch (statusCode) {
+                case 200: response200Header(dos); break;
+                case 302: response302Header(dos); break;
+            }
+
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
@@ -69,6 +97,7 @@ public class RequestHandler extends Thread {
             log.error(e.getMessage());
         }
     }
+
 
     private void responseBody(DataOutputStream dos, byte[] body) {
         try {
