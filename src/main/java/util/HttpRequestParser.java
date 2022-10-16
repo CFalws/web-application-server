@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
+
+import static util.HttpRequestUtils.parseCookies;
 
 public class HttpRequestParser {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
@@ -43,5 +46,18 @@ public class HttpRequestParser {
             log.debug(line);
         }
         return -1;
+    }
+
+    public static boolean getLogin(BufferedReader br) throws IOException {
+        while (br.ready()) {
+            String line;
+            if ((line = br.readLine()).contains("Cookie")) {
+                String[] keyVal = line.split(":");
+                Map<String, String> loginInfo = HttpRequestUtils.parseCookies(keyVal[1].substring(1));
+                log.info(loginInfo.get("logined"));
+                return Boolean.parseBoolean(loginInfo.get("logined"));
+            }
+        }
+        return false;
     }
 }
