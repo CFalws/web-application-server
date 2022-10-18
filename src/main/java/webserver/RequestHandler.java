@@ -28,11 +28,7 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-
-            DataOutputStream dos = new DataOutputStream(out);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            makeResp(br, dos);
-
+            makeResp(new BufferedReader(new InputStreamReader(in)), new DataOutputStream(out));
         } catch (IOException e) {
             log.error(e.getMessage());
         }
