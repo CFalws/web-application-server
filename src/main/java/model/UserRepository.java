@@ -1,5 +1,6 @@
+package model;
+
 import db.DataBase;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestParser;
@@ -10,8 +11,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-public class Crud {
-    private static Logger log = LoggerFactory.getLogger(Crud.class);
+public class UserRepository {
+    private static Logger log = LoggerFactory.getLogger(UserRepository.class);
 
     public static boolean login(BufferedReader br) {
         try {

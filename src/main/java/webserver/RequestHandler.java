@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.util.Objects;
 
-import Crud;
+import model.UserRepository;
 import db.DataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,15 +38,15 @@ public class RequestHandler extends Thread {
         String path = HttpRequestParser.path(br);
         switch (path) {
             case "/user/create":
-                Crud.createUser(br);
+                UserRepository.createUser(br);
                 makeHttpResp(DEFAULT_PATH, 302, dos, "");
                 break;
             case "/user/login":
-                if (Crud.login(br)) loginResp(DEFAULT_PATH, dos, true);
+                if (UserRepository.login(br)) loginResp(DEFAULT_PATH, dos, true);
                 else loginResp("/user/login_failed.html", dos, false);
                 break;
             case "/user/list":
-                if (Crud.list(br)) listResp(dos);
+                if (UserRepository.list(br)) listResp(dos);
                 else makeHttpResp("/user/login.html", 302, dos, "");
                 break;
             case "/css/style.css": makeCssResp(path, dos); break;
