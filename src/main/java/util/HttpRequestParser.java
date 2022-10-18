@@ -25,12 +25,8 @@ public class HttpRequestParser {
 
     public static String bodyOf(BufferedReader br) throws IOException {
         int contentLen = contentLengthOf(br);
-        if (contentLen > 0)
-            while (br.readLine().length() > 0) ;
-        log.debug("getBody end");
-        if (contentLen > 0)
-            return IOUtils.readData(br, contentLen);
-        return null;
+        while (br.readLine().length() > 0) ;
+        return IOUtils.readData(br, contentLen);
     }
 
     private static int contentLengthOf(BufferedReader br) throws IOException {
@@ -42,7 +38,7 @@ public class HttpRequestParser {
             }
             log.debug(line);
         }
-        return -1;
+        return 0;
     }
 
     public static boolean getLogin(BufferedReader br) throws IOException {
