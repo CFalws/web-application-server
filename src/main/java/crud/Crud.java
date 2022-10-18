@@ -32,8 +32,7 @@ public class Crud {
 
     public static void createUser(BufferedReader br) {
         try {
-            String body = HttpRequestParser.body(br);
-            Map<String, String> info = HttpRequestUtils.parseQueryString(body);
+            Map<String, String> info = HttpRequestUtils.parseQueryString(HttpRequestParser.body(br));
             DataBase.addUser(new User(info.get("userId"), info.get("password"), info.get("name"), info.get("email")));
             log.debug("ID: " + info.get("userId") + " made");
         } catch (IOException e) {
