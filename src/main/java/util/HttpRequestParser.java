@@ -24,8 +24,7 @@ public class HttpRequestParser {
     }
 
     public static String bodyOf(BufferedReader br) throws IOException {
-        int contentLen = getContentLength(br);
-        log.debug(String.valueOf(contentLen));
+        int contentLen = contentLengthOf(br);
         if (contentLen > 0)
             while (br.readLine().length() > 0) ;
         log.debug("getBody end");
@@ -34,7 +33,7 @@ public class HttpRequestParser {
         return null;
     }
 
-    private static int getContentLength(BufferedReader br) throws IOException {
+    private static int contentLengthOf(BufferedReader br) throws IOException {
         while (br.ready()) {
             String line;
             if ((line = br.readLine()).contains("Content-Length")) {
