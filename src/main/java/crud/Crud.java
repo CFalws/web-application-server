@@ -34,9 +34,8 @@ public class Crud {
         try {
             String body = HttpRequestParser.body(br);
             Map<String, String> info = HttpRequestUtils.parseQueryString(body);
-            User user = new User(info.get("userId"), info.get("password"), info.get("name"), info.get("email"));
-            DataBase.addUser(user);
-            log.debug("ID: " + user.getUserId() + " made");
+            DataBase.addUser(new User(info.get("userId"), info.get("password"), info.get("name"), info.get("email")));
+            log.debug("ID: " + info.get("userId") + " made");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
