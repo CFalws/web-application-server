@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.util.Objects;
 
+import model.ResponseRenderer;
 import model.UserRepository;
 import db.DataBase;
 import org.slf4j.Logger;
@@ -28,13 +29,14 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            makeResp(new BufferedReader(new InputStreamReader(in)), new DataOutputStream(out));
+            new ResponseRenderer(new BufferedReader(new InputStreamReader(in))
+                    , new DataOutputStream(out)).render(this);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void makeResp(BufferedReader br, DataOutputStream dos) throws IOException {
+    public void makeResp(BufferedReader br, DataOutputStream dos) throws IOException {
         String path = HttpRequestParser.path(br);
         switch (path) {
             case "/user/create":
