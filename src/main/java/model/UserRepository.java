@@ -29,7 +29,7 @@ public class UserRepository {
         }
     }
 
-    public static void createUser(BufferedReader br) {
+    public static void create(BufferedReader br) {
         try {
             Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
             DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));

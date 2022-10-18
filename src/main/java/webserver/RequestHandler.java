@@ -38,7 +38,7 @@ public class RequestHandler extends Thread {
         String path = HttpRequestParser.path(br);
         switch (path) {
             case "/user/create":
-                UserRepository.createUser(br);
+                UserRepository.create(br);
                 makeHttpResp(DEFAULT_PATH, 302, dos, "");
                 break;
             case "/user/login":
