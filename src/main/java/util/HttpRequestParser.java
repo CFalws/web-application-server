@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-import static util.HttpRequestUtils.parseCookies;
-
 public class HttpRequestParser {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
     public static String path(BufferedReader br) {
@@ -25,7 +23,7 @@ public class HttpRequestParser {
         }
     }
 
-    public static String body(BufferedReader br) throws IOException {
+    public static String bodyOf(BufferedReader br) throws IOException {
         int contentLen = getContentLength(br);
         log.debug(String.valueOf(contentLen));
         if (contentLen > 0)

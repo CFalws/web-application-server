@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.util.Objects;
 
-import crud.Crud;
+import Crud;
 import db.DataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

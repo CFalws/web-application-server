@@ -1,5 +1,3 @@
-package crud;
-
 import db.DataBase;
 import model.User;
 import org.slf4j.Logger;
@@ -17,7 +15,7 @@ public class Crud {
 
     public static boolean login(BufferedReader br) {
         try {
-            String body = HttpRequestParser.body(br);
+            String body = HttpRequestParser.bodyOf(br);
             Map<String, String> info = HttpRequestUtils.parseQueryString(body);
             log.debug(info.get("userId") + " " + info.get("password"));
             User user = DataBase.findUserById(info.get("userId"));
@@ -32,7 +30,7 @@ public class Crud {
 
     public static void createUser(BufferedReader br) {
         try {
-            Map<String, String> info = HttpRequestUtils.parseQueryString(HttpRequestParser.body(br));
+            Map<String, String> info = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
             DataBase.addUser(new User(info.get("userId"), info.get("password"), info.get("name"), info.get("email")));
             log.debug("ID: " + info.get("userId") + " made");
         } catch (IOException e) {
