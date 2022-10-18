@@ -31,9 +31,9 @@ public class UserRepository {
 
     public static void createUser(BufferedReader br) {
         try {
-            Map<String, String> info = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
-            DataBase.addUser(new User(info.get("userId"), info.get("password"), info.get("name"), info.get("email")));
-            log.debug("ID: " + info.get("userId") + " made");
+            Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
+            DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));
+            log.debug("ID: " + parameters.get("userId") + " made");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
