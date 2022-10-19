@@ -25,18 +25,14 @@ public class UserRepository {
         }
     }
 
-    public static void create(BufferedReader br) {
-        try {
-            Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
-            DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));
-            log.debug("ID: " + parameters.get("userId") + " made");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public static void create(BufferedReader br) throws IOException {
+        Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
+        DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));
+        log.debug("ID: " + parameters.get("userId") + " made");
     }
 
     public static boolean list(BufferedReader br) throws IOException {
-        if (HttpRequestParser.getLogin(br)) {
+        if (HttpRequestParser.isSignedIn(br)) {
             return true;
         }
         return false;

@@ -37,7 +37,7 @@ public class HttpRequestParser {
         return 0;
     }
 
-    public static boolean getLogin(BufferedReader br) throws IOException {
+    public static boolean isSignedIn(BufferedReader br) throws IOException {
         while (br.ready()) {
             String line;
             if ((line = br.readLine()).contains("Cookie")) {
