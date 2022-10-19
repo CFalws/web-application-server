@@ -49,7 +49,7 @@ public class RequestHandler extends Thread {
                 else resp302SignInFail(HOST + "/user/login_failed.html", dos);
                 break;
             case "/user/list":
-                if (HttpRequestParser.isSignedIn(br)) listResp(dos);
+                if (HttpRequestParser.isSignedIn(br)) resp200AllUser(dos);
                 else resp302(HOST + "/user/login.html", dos);
                 break;
             default:
@@ -75,7 +75,7 @@ public class RequestHandler extends Thread {
         dos.writeBytes("Location: " + location + "\r\n");
     }
 
-    private void listResp(DataOutputStream dos) throws IOException {
+    private void resp200AllUser(DataOutputStream dos) throws IOException {
         response200Header(dos);
         byte[] body = DataBase.findAll().toString().getBytes();
         responseHttpHeader(dos, body.length);
