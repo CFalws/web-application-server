@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 import model.ResponseRenderer;
-import model.UserRepository;
+import model.UserManager;
 import db.DataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +40,15 @@ public class RequestHandler extends Thread {
         String path = HttpRequestParser.requestLine(br);
         switch (path) {
             case "/user/create":
-                UserRepository.create(br);
+                UserManager.create(br);
                 makeHttpResp(DEFAULT_PATH, 302, dos, "");
                 break;
             case "/user/login":
-                if (UserRepository.signIn(br)) loginResp(DEFAULT_PATH, dos, true);
+                if (UserManager.signIn(br)) loginResp(DEFAULT_PATH, dos, true);
                 else loginResp("/user/login_failed.html", dos, false);
                 break;
             case "/user/list":
-                if (UserRepository.list(br)) listResp(dos);
+                if (UserManager.list(br)) listResp(dos);
                 else makeHttpResp("/user/login.html", 302, dos, "");
                 break;
             case "/css/style.css": makeCssResp(path, dos); break;

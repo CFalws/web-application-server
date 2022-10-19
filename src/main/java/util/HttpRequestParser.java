@@ -40,7 +40,6 @@ public class HttpRequestParser {
             if ((line = br.readLine()).contains("Cookie")) {
                 Map<String, String> userStatus = HttpRequestUtils
                         .parseCookies(line.split(":")[1].substring(1));
-                log.info(userStatus.get("logined"));
                 return Boolean.parseBoolean(userStatus.get("logined"));
             }
         }

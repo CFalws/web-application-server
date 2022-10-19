@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-public class UserRepository {
-    private static Logger log = LoggerFactory.getLogger(UserRepository.class);
+public class UserManager {
+    private static Logger log = LoggerFactory.getLogger(UserManager.class);
 
     public static boolean signIn(BufferedReader br) throws IOException {
         Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
