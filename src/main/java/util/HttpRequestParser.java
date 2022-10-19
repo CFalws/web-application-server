@@ -38,8 +38,8 @@ public class HttpRequestParser {
         while (br.ready()) {
             String line;
             if ((line = br.readLine()).contains("Cookie")) {
-                String[] keyVal = line.split(":");
-                Map<String, String> loginInfo = HttpRequestUtils.parseCookies(keyVal[1].substring(1));
+                Map<String, String> loginInfo = HttpRequestUtils
+                        .parseCookies(line.split(":")[1].substring(1));
                 log.info(loginInfo.get("logined"));
                 return Boolean.parseBoolean(loginInfo.get("logined"));
             }
