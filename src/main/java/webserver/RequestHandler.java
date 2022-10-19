@@ -43,16 +43,16 @@ public class RequestHandler extends Thread {
                 UserManager.create(br);
 //                makeHttpResp(DEFAULT_PATH, 302, dos, "");
 
-                header302(REDIRECT_LOCATION + DEFAULT_PATH, dos, 0);
+                header302(REDIRECT_LOCATION + DEFAULT_PATH, dos);
 
                 break;
             case "/user/login":
-                if (UserManager.signIn(br)) loginResp(DEFAULT_PATH, dos, true);
-                else loginResp("/user/login_failed.html", dos, false);
+                if (UserManager.signIn(br)) header302SignInSuccess(REDIRECT_LOCATION + DEFAULT_PATH, dos);
+                else header302SignInFail(REDIRECT_LOCATION + "/user/login_failed.html", dos);
                 break;
             case "/user/list":
                 if (UserManager.list(br)) listResp(dos);
-                else header302(REDIRECT_LOCATION + "/user/login.html", dos, 0);
+                else header302(REDIRECT_LOCATION + "/user/login.html", dos);
                 break;
             case "/css/style.css": makeCssResp(path, dos); break;
             case "/css/bootstrap.min.css": makeCssResp(path, dos); break;
@@ -62,12 +62,21 @@ public class RequestHandler extends Thread {
         }
     }
 
-    private void header302(String location, DataOutputStream dos, int lengthOfBodyContent) throws IOException {
+    private void header302SignInSuccess(String location, DataOutputStream dos) throws IOException {
+        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+        dos.writeBytes("Set-Cookie: logined=true\r\n");
+        dos.writeBytes("Location: " + location + "\r\n");
+    }
+
+    private void header302SignInFail(String location, DataOutputStream dos) throws IOException {
+        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+        dos.writeBytes("Set-Cookie: logined=false\r\n");
+        dos.writeBytes("Location: " + location + "\r\n");
+    }
+
+    private void header302(String location, DataOutputStream dos) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + location + "\r\n");
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-        dos.writeBytes("\r\n");
     }
 
     private void makeCssResp(String path, DataOutputStream dos) throws IOException {
@@ -84,12 +93,6 @@ public class RequestHandler extends Thread {
         responseBody(dos, body);
     }
 
-    private void loginResp(String path, DataOutputStream dos, boolean logined) throws IOException {
-        if (logined)
-            makeHttpResp(path, 302, dos, "Set-Cookie: logined=true");
-        else
-            makeHttpResp(path, 302, dos, "Set-Cookie: logined=false");
-    }
 
     private void makeHttpResp(String path, int statusCode, DataOutputStream dos, String header) throws IOException {
         switch (statusCode) {
