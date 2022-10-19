@@ -28,10 +28,8 @@ public class HttpRequestParser {
         while (br.ready()) {
             String line;
             if ((line = br.readLine()).contains("Content-Length")) {
-                String[] keyVal = line.split(":");
-                return Integer.valueOf(keyVal[1].substring(1));
+                return Integer.valueOf(line.split(":")[1].substring(1));
             }
-            log.debug(line);
         }
         return 0;
     }
