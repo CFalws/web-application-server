@@ -2,7 +2,6 @@ package model;
 
 import db.DataBase;
 import util.HttpRequestParser;
-import webserver.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -29,8 +28,8 @@ public class ResponseRenderer {
                 resp302(HOST + DEFAULT_PATH);
                 break;
             case "/user/login":
-                if (UserManager.signIn(br)) resp302SignInSuccess(HOST + DEFAULT_PATH);
-                else resp302SignInFail(HOST + "/user/login_failed.html");
+                if (UserManager.signIn(br)) resp302SignInSuccess(HOST + DEFAULT_PATH, true);
+                else resp302SignInSuccess(HOST + "/user/login_failed.html", false);
                 break;
             case "/user/list":
                 if (HttpRequestParser.isSignedIn(br)) resp200AllUser();
@@ -42,6 +41,10 @@ public class ResponseRenderer {
         }
     }
 
+    private void resp302SignInSuccess(String location, Boolean success) throws IOException {
+        resp302(location);
+        dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
+    }
     private void resp302SignInSuccess(String location) throws IOException {
         resp302(location);
         dos.writeBytes("Set-Cookie: logined=true\r\n\r\n");
