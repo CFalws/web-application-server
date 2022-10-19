@@ -41,7 +41,10 @@ public class RequestHandler extends Thread {
         switch (path) {
             case "/user/create":
                 UserManager.create(br);
-                makeHttpResp(DEFAULT_PATH, 302, dos, "");
+//                makeHttpResp(DEFAULT_PATH, 302, dos, "");
+
+                header302(REDIRECT_LOCATION + DEFAULT_PATH, dos, 0);
+
                 break;
             case "/user/login":
                 if (UserManager.signIn(br)) loginResp(DEFAULT_PATH, dos, true);
@@ -49,7 +52,7 @@ public class RequestHandler extends Thread {
                 break;
             case "/user/list":
                 if (UserManager.list(br)) listResp(dos);
-                else makeHttpResp("/user/login.html", 302, dos, "");
+                else header302(REDIRECT_LOCATION + "/user/login.html", dos, 0);
                 break;
             case "/css/style.css": makeCssResp(path, dos); break;
             case "/css/bootstrap.min.css": makeCssResp(path, dos); break;
@@ -57,6 +60,14 @@ public class RequestHandler extends Thread {
                 makeHttpResp(path, 200, dos, "");
                 break;
         }
+    }
+
+    private void header302(String location, DataOutputStream dos, int lengthOfBodyContent) throws IOException {
+        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+        dos.writeBytes("Location: " + location + "\r\n");
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+        dos.writeBytes("\r\n");
     }
 
     private void makeCssResp(String path, DataOutputStream dos) throws IOException {
