@@ -36,10 +36,10 @@ public class HttpRequestParser {
 
     public static boolean isSignedIn(BufferedReader br) throws IOException {
         while (br.ready()) {
-            String line;
-            if ((line = br.readLine()).contains("Cookie")) {
+            String header;
+            if ((header = br.readLine()).contains("Cookie")) {
                 Map<String, String> userStatus = HttpRequestUtils
-                        .parseCookies(line.split(":")[1].substring(1));
+                        .parseCookies(HttpRequestUtils.parseHeader(header).getValue());
                 return Boolean.parseBoolean(userStatus.get("logined"));
             }
         }
