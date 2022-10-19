@@ -15,7 +15,7 @@ import util.HttpRequestParser;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
     private static final String DEFAULT_PATH = "/index.html";
-    private static final String REDIRECT_LOCATION = "http://localhost:8080";
+    private static final String HOST = "http://localhost:8080";
 
     private Socket connection;
 
@@ -43,16 +43,16 @@ public class RequestHandler extends Thread {
                 UserManager.create(br);
 //                makeHttpResp(DEFAULT_PATH, 302, dos, "");
 
-                header302(REDIRECT_LOCATION + DEFAULT_PATH, dos);
+                header302(HOST + DEFAULT_PATH, dos);
 
                 break;
             case "/user/login":
-                if (UserManager.signIn(br)) header302SignInSuccess(REDIRECT_LOCATION + DEFAULT_PATH, dos);
-                else header302SignInFail(REDIRECT_LOCATION + "/user/login_failed.html", dos);
+                if (UserManager.signIn(br)) header302SignInSuccess(HOST + DEFAULT_PATH, dos);
+                else header302SignInFail(HOST + "/user/login_failed.html", dos);
                 break;
             case "/user/list":
                 if (UserManager.list(br)) listResp(dos);
-                else header302(REDIRECT_LOCATION + "/user/login.html", dos);
+                else header302(HOST + "/user/login.html", dos);
                 break;
             case "/css/style.css": makeCssResp(path, dos); break;
             case "/css/bootstrap.min.css": makeCssResp(path, dos); break;
@@ -127,7 +127,7 @@ public class RequestHandler extends Thread {
 
     private void response302Header(String path, DataOutputStream dos) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
-        dos.writeBytes("Location: " + REDIRECT_LOCATION + path + "\r\n");
+        dos.writeBytes("Location: " + HOST + path + "\r\n");
     }
 
     private void responseHttpHeader(DataOutputStream dos, int lengthOfBodyContent) throws IOException {
