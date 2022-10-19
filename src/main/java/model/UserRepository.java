@@ -32,9 +32,6 @@ public class UserRepository {
     }
 
     public static boolean list(BufferedReader br) throws IOException {
-        if (HttpRequestParser.isSignedIn(br)) {
-            return true;
-        }
-        return false;
+        return HttpRequestParser.isSignedIn(br);
     }
 }
