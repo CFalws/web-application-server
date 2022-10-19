@@ -37,7 +37,7 @@ public class RequestHandler extends Thread {
     }
 
     public void makeResp(BufferedReader br, DataOutputStream dos) throws IOException {
-        String path = HttpRequestParser.path(br);
+        String path = HttpRequestParser.requestLine(br);
         switch (path) {
             case "/user/create":
                 UserRepository.create(br);
