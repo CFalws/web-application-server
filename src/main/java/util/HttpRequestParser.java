@@ -11,9 +11,8 @@ import java.util.Objects;
 public class HttpRequestParser {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
     public static String requestLine(BufferedReader br) throws IOException {
-        String[] header = new String[0];
-        header = br.readLine().split(" ");
-        if (header.length < 2 || !Objects.equals(header[1].substring(0, 1), "/"))
+        String[] header = br.readLine().split(" ");
+        if (!Objects.equals(header[1].substring(0, 1), "/"))
             throw new IllegalArgumentException();
         log.debug(header[1]);
         return header[1];
