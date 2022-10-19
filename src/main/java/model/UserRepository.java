@@ -17,9 +17,9 @@ public class UserRepository {
     public static boolean signIn(BufferedReader br) throws IOException {
         Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
         log.debug(parameters.get("userId") + " " + parameters.get("password"));
-        User user = DataBase.findUserById(parameters.get("userId"));
         try {
-            return Objects.equals(user.getPassword(), parameters.get("password"));
+            return Objects.equals(DataBase.findUserById(parameters.get("userId")).getPassword()
+                    , parameters.get("password"));
         } catch (NullPointerException e) {
             return false;
         }
