@@ -53,7 +53,7 @@ public class RequestHandler extends Thread {
                 else resp302(HOST + "/user/login.html", dos);
                 break;
             default:
-                makeHttpResp(path, 200, dos, "");
+                resp200(path, 200, dos, "");
                 break;
         }
     }
@@ -83,7 +83,7 @@ public class RequestHandler extends Thread {
     }
 
 
-    private void makeHttpResp(String path, int statusCode, DataOutputStream dos, String header) throws IOException {
+    private void resp200(String path, int statusCode, DataOutputStream dos, String header) throws IOException {
         switch (statusCode) {
             case 200: response200Header(dos); break;
             default: break;
