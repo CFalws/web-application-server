@@ -45,15 +45,6 @@ public class ResponseRenderer {
         resp302(location);
         dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
     }
-    private void resp302SignInSuccess(String location) throws IOException {
-        resp302(location);
-        dos.writeBytes("Set-Cookie: logined=true\r\n\r\n");
-    }
-
-    private void resp302SignInFail(String location) throws IOException {
-        resp302(location);
-        dos.writeBytes("Set-Cookie: logined=false\r\n\r\n");
-    }
 
     private void resp302(String location) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
