@@ -42,15 +42,15 @@ public class RequestHandler extends Thread {
         switch (path) {
             case "/user/create":
                 UserManager.create(br);
-                header302(HOST + DEFAULT_PATH, dos);
+                resp302(HOST + DEFAULT_PATH, dos);
                 break;
             case "/user/login":
-                if (UserManager.signIn(br)) header302SignInSuccess(HOST + DEFAULT_PATH, dos);
-                else header302SignInFail(HOST + "/user/login_failed.html", dos);
+                if (UserManager.signIn(br)) resp302SignInSuccess(HOST + DEFAULT_PATH, dos);
+                else resp302SignInFail(HOST + "/user/login_failed.html", dos);
                 break;
             case "/user/list":
                 if (UserManager.list(br)) listResp(dos);
-                else header302(HOST + "/user/login.html", dos);
+                else resp302(HOST + "/user/login.html", dos);
                 break;
             default:
                 makeHttpResp(path, 200, dos, "");
@@ -58,19 +58,19 @@ public class RequestHandler extends Thread {
         }
     }
 
-    private void header302SignInSuccess(String location, DataOutputStream dos) throws IOException {
+    private void resp302SignInSuccess(String location, DataOutputStream dos) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Set-Cookie: logined=true\r\n");
         dos.writeBytes("Location: " + location + "\r\n");
     }
 
-    private void header302SignInFail(String location, DataOutputStream dos) throws IOException {
+    private void resp302SignInFail(String location, DataOutputStream dos) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Set-Cookie: logined=false\r\n");
         dos.writeBytes("Location: " + location + "\r\n");
     }
 
-    private void header302(String location, DataOutputStream dos) throws IOException {
+    private void resp302(String location, DataOutputStream dos) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + location + "\r\n");
     }
@@ -86,7 +86,6 @@ public class RequestHandler extends Thread {
     private void makeHttpResp(String path, int statusCode, DataOutputStream dos, String header) throws IOException {
         switch (statusCode) {
             case 200: response200Header(dos); break;
-            case 302: response302Header(path, dos); break;
             default: break;
         }
         byte[] body = getBytes(path);
@@ -114,23 +113,11 @@ public class RequestHandler extends Thread {
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
     }
 
-    private void response302Header(String path, DataOutputStream dos) throws IOException {
-        dos.writeBytes("HTTP/1.1 302 Found \r\n");
-        dos.writeBytes("Location: " + HOST + path + "\r\n");
-    }
-
     private void responseHttpHeader(DataOutputStream dos, int lengthOfBodyContent) throws IOException {
         dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
         dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
         dos.writeBytes("\r\n");
     }
-
-    private void responseCssHeader(DataOutputStream dos, int lengthOfBodyContent) throws IOException {
-        dos.writeBytes("Content-Type: text/css\r\n");
-        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-        dos.writeBytes("\r\n");
-    }
-
 
     private void responseBody(DataOutputStream dos, byte[] body) throws IOException {
          dos.write(body, 0, body.length);
