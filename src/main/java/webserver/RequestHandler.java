@@ -16,6 +16,7 @@ public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
     private static final String DEFAULT_PATH = "/index.html";
     private static final String HOST = "http://localhost:8080";
+    public static final String WEBAPP_PATH = "./webapp";
 
     private Socket connection;
 
@@ -41,10 +42,7 @@ public class RequestHandler extends Thread {
         switch (path) {
             case "/user/create":
                 UserManager.create(br);
-//                makeHttpResp(DEFAULT_PATH, 302, dos, "");
-
                 header302(HOST + DEFAULT_PATH, dos);
-
                 break;
             case "/user/login":
                 if (UserManager.signIn(br)) header302SignInSuccess(HOST + DEFAULT_PATH, dos);
@@ -54,8 +52,6 @@ public class RequestHandler extends Thread {
                 if (UserManager.list(br)) listResp(dos);
                 else header302(HOST + "/user/login.html", dos);
                 break;
-            case "/css/style.css": makeCssResp(path, dos); break;
-            case "/css/bootstrap.min.css": makeCssResp(path, dos); break;
             default:
                 makeHttpResp(path, 200, dos, "");
                 break;
@@ -77,13 +73,6 @@ public class RequestHandler extends Thread {
     private void header302(String location, DataOutputStream dos) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + location + "\r\n");
-    }
-
-    private void makeCssResp(String path, DataOutputStream dos) throws IOException {
-        response200Header(dos);
-        byte[] body = getBytes(path);
-        responseCssHeader(dos, body.length);
-        responseBody(dos, body);
     }
 
     private void listResp(DataOutputStream dos) throws IOException {
@@ -115,7 +104,7 @@ public class RequestHandler extends Thread {
             return "hello world".getBytes();
         }
         try {
-            return Files.readAllBytes(new File("./webapp" + path).toPath());
+            return Files.readAllBytes(new File(WEBAPP_PATH + path).toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
