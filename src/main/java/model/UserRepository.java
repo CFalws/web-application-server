@@ -14,18 +14,14 @@ import java.util.Objects;
 public class UserRepository {
     private static Logger log = LoggerFactory.getLogger(UserRepository.class);
 
-    public static boolean login(BufferedReader br) {
+    public static boolean signIn(BufferedReader br) throws IOException {
+        Map<String, String> parameters = HttpRequestUtils.parseQueryString(HttpRequestParser.bodyOf(br));
+        log.debug(parameters.get("userId") + " " + parameters.get("password"));
+        User user = DataBase.findUserById(parameters.get("userId"));
         try {
-            String body = HttpRequestParser.bodyOf(br);
-            Map<String, String> info = HttpRequestUtils.parseQueryString(body);
-            log.debug(info.get("userId") + " " + info.get("password"));
-            User user = DataBase.findUserById(info.get("userId"));
-
-            if (user == null) return false;
-            if (Objects.equals(user.getPassword(), info.get("password"))) return true;
+            return Objects.equals(user.getPassword(), parameters.get("password"));
+        } catch (NullPointerException e) {
             return false;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -44,7 +44,7 @@ public class RequestHandler extends Thread {
                 makeHttpResp(DEFAULT_PATH, 302, dos, "");
                 break;
             case "/user/login":
-                if (UserRepository.login(br)) loginResp(DEFAULT_PATH, dos, true);
+                if (UserRepository.signIn(br)) loginResp(DEFAULT_PATH, dos, true);
                 else loginResp("/user/login_failed.html", dos, false);
                 break;
             case "/user/list":
