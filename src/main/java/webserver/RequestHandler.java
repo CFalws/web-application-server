@@ -49,7 +49,7 @@ public class RequestHandler extends Thread {
                 else resp302SignInFail(HOST + "/user/login_failed.html", dos);
                 break;
             case "/user/list":
-                if (UserManager.list(br)) listResp(dos);
+                if (HttpRequestParser.isSignedIn(br)) listResp(dos);
                 else resp302(HOST + "/user/login.html", dos);
                 break;
             default:

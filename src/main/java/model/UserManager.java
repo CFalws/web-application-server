@@ -30,8 +30,4 @@ public class UserManager {
         DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));
         log.debug("ID: " + parameters.get("userId") + " made");
     }
-
-    public static boolean list(BufferedReader br) throws IOException {
-        return HttpRequestParser.isSignedIn(br);
-    }
 }
