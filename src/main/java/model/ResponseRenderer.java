@@ -78,15 +78,11 @@ public class ResponseRenderer {
         responseBody(body);
     }
 
-    private byte[] getBytes(String path) {
+    private byte[] getBytes(String path) throws IOException {
         if (path.equals("/")) {
-            return "hello world".getBytes();
+            path = "/index.html";
         }
-        try {
-            return Files.readAllBytes(new File(WEBAPP_PATH + path).toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return Files.readAllBytes(new File(WEBAPP_PATH + path).toPath());
     }
 
     private void responseBody(byte[] body) throws IOException {
