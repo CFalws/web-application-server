@@ -76,25 +76,21 @@ public class RequestHandler extends Thread {
     }
 
     private void resp200AllUser(DataOutputStream dos) throws IOException {
-        response200Header(dos);
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
         byte[] body = DataBase.findAll().toString().getBytes();
-        responseHttpHeader(dos, body.length);
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        dos.writeBytes("\r\n");
         responseBody(dos, body);
     }
 
 
     private void resp200(String path, int statusCode, DataOutputStream dos, String header) throws IOException {
-        switch (statusCode) {
-            case 200: response200Header(dos); break;
-            default: break;
-        }
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
         byte[] body = getBytes(path);
-        if (!(header == null) && !Objects.equals(header, "")) {
-            log.info("yes");
-            dos.writeBytes(header + " \r\n");
-        }
-        responseHttpHeader(dos, body.length);
-
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        dos.writeBytes("\r\n");
         responseBody(dos, body);
     }
 
@@ -107,16 +103,6 @@ public class RequestHandler extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void response200Header(DataOutputStream dos) throws IOException {
-        dos.writeBytes("HTTP/1.1 200 OK \r\n");
-    }
-
-    private void responseHttpHeader(DataOutputStream dos, int lengthOfBodyContent) throws IOException {
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-        dos.writeBytes("\r\n");
     }
 
     private void responseBody(DataOutputStream dos, byte[] body) throws IOException {
