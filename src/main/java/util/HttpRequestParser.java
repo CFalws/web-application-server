@@ -26,9 +26,9 @@ public class HttpRequestParser {
 
     private static int contentLengthOf(BufferedReader br) throws IOException {
         while (br.ready()) {
-            String line;
-            if ((line = br.readLine()).contains("Content-Length")) {
-                return Integer.valueOf(line.split(":")[1].substring(1));
+            String header;
+            if ((header = br.readLine()).contains("Content-Length")) {
+                return Integer.valueOf(HttpRequestUtils.parseHeader(header).getValue());
             }
         }
         return 0;
