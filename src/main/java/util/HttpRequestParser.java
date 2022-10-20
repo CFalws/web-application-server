@@ -71,7 +71,7 @@ public class HttpRequestParser {
         return header.get(key);
     }
 
-    public String getBody() {
+    public String body() {
         return body;
     }
 }

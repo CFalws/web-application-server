@@ -22,8 +22,8 @@ public class ResponseRenderer {
 
     public void render() throws IOException {
         HttpRequestParser requestParser = new HttpRequestParser(request);
-        String path = requestParser.resourcePath();
-        switch (path) {
+        String resourcePath = requestParser.resourcePath();
+        switch (resourcePath) {
             case "/user/create":
                 UserManager.create(requestParser);
                 resp302(HOST + DEFAULT_PATH);
@@ -37,7 +37,7 @@ public class ResponseRenderer {
                 else resp302(HOST + "/user/login.html");
                 break;
             default:
-                resp200(path);
+                resp200(resourcePath);
                 break;
         }
     }
