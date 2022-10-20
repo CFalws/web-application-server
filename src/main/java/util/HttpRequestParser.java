@@ -31,10 +31,6 @@ public class HttpRequestParser {
         return IOUtils.readData(request, contentLen);
     }
 
-    public String header(String key) throws IOException {
-        return header.get(key);
-    }
-
     private void parse(BufferedReader request) {
         try {
             String line;
@@ -60,8 +56,12 @@ public class HttpRequestParser {
         }
     }
 
-    public String getPath() {
+    public String resourcePath() {
         return path;
+    }
+
+    public String header(String key) throws IOException {
+        return header.get(key);
     }
 
     public String getBody() {
