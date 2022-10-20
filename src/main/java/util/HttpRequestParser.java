@@ -26,25 +26,29 @@ public class HttpRequestParser {
         path = reqLine[1];
     }
 
-    private String bodyOf(BufferedReader request) throws IOException {
+    private void body(BufferedReader request) throws IOException {
         int contentLen = Integer.parseInt(header.get("Content-Length"));
-        return IOUtils.readData(request, contentLen);
+        body = IOUtils.readData(request, contentLen);
     }
 
     private void parse(BufferedReader request) {
         try {
-            String line;
             requestLine(request);
-            while ((line = request.readLine()).length() != 0) {
-                header.put(HttpRequestUtils.parseHeader(line).getKey()
-                        , HttpRequestUtils.parseHeader(line).getValue());
-            }
+            header(request);
             if (!Objects.isNull(header.get("Content-Length")))
-                this.body = bodyOf(request);
+                body(request);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private void header(BufferedReader request) throws IOException {
+        String line;
+        while ((line = request.readLine()).length() != 0) {
+            header.put(HttpRequestUtils.parseHeader(line).getKey()
+                    , HttpRequestUtils.parseHeader(line).getValue());
+        }
     }
 
     public boolean isSignedIn() throws IOException {
