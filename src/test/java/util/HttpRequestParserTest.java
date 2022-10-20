@@ -21,6 +21,7 @@ public class HttpRequestParserTest {
         HttpRequestParser parser = new HttpRequestParser(br);
         try {
             assertThat(parser.header("Content-Length")).isEqualTo("15");
+            assertThat(parser.header("Cookie")).isEqualTo("logined=true");
             assertThat(parser.header("Hello world")).isNull();
         } catch (IOException e) {
             throw new RuntimeException(e);

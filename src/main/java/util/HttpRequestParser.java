@@ -16,6 +16,7 @@ public class HttpRequestParser {
 
     public HttpRequestParser(BufferedReader br) {
         this.br = br;
+        parse();
     }
     public static String requestLine(BufferedReader br) throws IOException {
         String[] header = br.readLine().split(" ");
@@ -42,12 +43,21 @@ public class HttpRequestParser {
     }
 
     public String header(String key) throws IOException {
-        String line;
-        while ((line = br.readLine()).length() != 0) {
-            header.put(HttpRequestUtils.parseHeader(line).getKey()
-                    , HttpRequestUtils.parseHeader(line).getValue());
-        }
+
         return header.get(key);
+    }
+
+    private void parse() {
+        try {
+            String line;
+            while ((line = br.readLine()).length() != 0) {
+                header.put(HttpRequestUtils.parseHeader(line).getKey()
+                        , HttpRequestUtils.parseHeader(line).getValue());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public static boolean isSignedIn(BufferedReader br) throws IOException {
