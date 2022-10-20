@@ -11,63 +11,57 @@ import java.util.Objects;
 
 public class HttpRequestParser {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
+    private String path;
     private Map<String, String> header = new HashMap<>();
     private String body;
 
-    public HttpRequestParser(BufferedReader br) {
-        parse(br);
+    public HttpRequestParser(BufferedReader request) {
+        parse(request);
     }
-    public static String requestLine(BufferedReader br) throws IOException {
-        String[] header = br.readLine().split(" ");
-        if (!Objects.equals(header[1].substring(0, 1), "/"))
+    private void requestLine(BufferedReader request) throws IOException {
+        String[] reqLine = request.readLine().split(" ");
+        if (!Objects.equals(reqLine[1].substring(0, 1), "/"))
             throw new IllegalArgumentException();
-        log.debug(header[1]);
-        return header[1];
+        log.debug(reqLine[1]);
+        path = reqLine[1];
     }
 
-    public String bodyOf(BufferedReader br) throws IOException {
+    private String bodyOf(BufferedReader request) throws IOException {
         int contentLen = Integer.parseInt(header.get("Content-Length"));
-        return IOUtils.readData(br, contentLen);
-    }
-
-    private static int contentLengthOf(BufferedReader br) throws IOException {
-        while (br.ready()) {
-            String header;
-            if ((header = br.readLine()).contains("Content-Length")) {
-                return Integer.valueOf(HttpRequestUtils.parseHeader(header).getValue());
-            }
-        }
-        return 0;
+        return IOUtils.readData(request, contentLen);
     }
 
     public String header(String key) throws IOException {
         return header.get(key);
     }
 
-    private void parse(BufferedReader br) {
+    private void parse(BufferedReader request) {
         try {
             String line;
-            while ((line = br.readLine()).length() != 0) {
+            requestLine(request);
+            while ((line = request.readLine()).length() != 0) {
                 header.put(HttpRequestUtils.parseHeader(line).getKey()
                         , HttpRequestUtils.parseHeader(line).getValue());
             }
-            this.body = bodyOf(br);
+            if (!Objects.isNull(header.get("Content-Length")))
+                this.body = bodyOf(request);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public static boolean isSignedIn(BufferedReader br) throws IOException {
-        while (br.ready()) {
-            String header;
-            if ((header = br.readLine()).contains("Cookie")) {
-                Map<String, String> userStatus = HttpRequestUtils
-                        .parseCookies(HttpRequestUtils.parseHeader(header).getValue());
-                return Boolean.parseBoolean(userStatus.get("logined"));
-            }
+    public boolean isSignedIn() throws IOException {
+        try {
+            return Boolean.parseBoolean(HttpRequestUtils
+                    .parseCookies(header.get("Cookie")).get("logined"));
+        } catch (NullPointerException e) {
+            return false;
         }
-        return false;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public String getBody() {
