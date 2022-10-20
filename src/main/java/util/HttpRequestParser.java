@@ -26,6 +26,14 @@ public class HttpRequestParser {
         path = reqLine[1];
     }
 
+    private void header(BufferedReader request) throws IOException {
+        String line;
+        while ((line = request.readLine()).length() != 0) {
+            header.put(HttpRequestUtils.parseHeader(line).getKey()
+                    , HttpRequestUtils.parseHeader(line).getValue());
+        }
+    }
+
     private void body(BufferedReader request) throws IOException {
         try {
             body = IOUtils.readData(request, Integer.parseInt(header.get("Content-Length")));
@@ -46,21 +54,13 @@ public class HttpRequestParser {
 
     }
 
-    private void header(BufferedReader request) throws IOException {
-        String line;
-        while ((line = request.readLine()).length() != 0) {
-            header.put(HttpRequestUtils.parseHeader(line).getKey()
-                    , HttpRequestUtils.parseHeader(line).getValue());
-        }
-    }
-
     public boolean isSignedIn() throws IOException {
-        try {
-            return Boolean.parseBoolean(HttpRequestUtils
-                    .parseCookies(header.get("Cookie")).get("logined"));
-        } catch (NullPointerException e) {
-            return false;
+        String cookie = header.get("Cookie");
+        if (Objects.nonNull(cookie)) {
+            return Boolean
+                    .parseBoolean(HttpRequestUtils.parseCookies(cookie).get("logined"));
         }
+        return false;
     }
 
     public String resourcePath() {
