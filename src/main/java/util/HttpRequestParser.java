@@ -41,8 +41,13 @@ public class HttpRequestParser {
         return 0;
     }
 
-    public String header(String key) {
-        return null;
+    public String header(String key) throws IOException {
+        String line;
+        while ((line = br.readLine()).length() != 0) {
+            header.put(HttpRequestUtils.parseHeader(line).getKey()
+                    , HttpRequestUtils.parseHeader(line).getValue());
+        }
+        return header.get(key);
     }
 
     public static boolean isSignedIn(BufferedReader br) throws IOException {
