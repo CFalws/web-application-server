@@ -26,7 +26,7 @@ public class HttpRequestParser {
         return header[1];
     }
 
-    public static String bodyOf(BufferedReader br) throws IOException {
+    public String bodyOf(BufferedReader br) throws IOException {
         int contentLen = contentLengthOf(br);
         while (br.readLine().length() > 0) ;
         return IOUtils.readData(br, contentLen);
@@ -43,7 +43,6 @@ public class HttpRequestParser {
     }
 
     public String header(String key) throws IOException {
-
         return header.get(key);
     }
 
