@@ -27,16 +27,19 @@ public class HttpRequestParser {
     }
 
     private void body(BufferedReader request) throws IOException {
-        int contentLen = Integer.parseInt(header.get("Content-Length"));
-        body = IOUtils.readData(request, contentLen);
+        try {
+            body = IOUtils.readData(request, Integer.parseInt(header.get("Content-Length")));
+        } catch (NumberFormatException e) {
+            // do nothing
+            log.debug("NumberFormat Exception!~~!");
+        }
     }
 
     private void parse(BufferedReader request) {
         try {
             requestLine(request);
             header(request);
-            if (!Objects.isNull(header.get("Content-Length")))
-                body(request);
+            body(request);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
