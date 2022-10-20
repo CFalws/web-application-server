@@ -11,13 +11,11 @@ import java.util.Objects;
 
 public class HttpRequestParser {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
-    private final BufferedReader br;
     private Map<String, String> header = new HashMap<>();
     private String body;
 
     public HttpRequestParser(BufferedReader br) {
-        this.br = br;
-        parse();
+        parse(br);
     }
     public static String requestLine(BufferedReader br) throws IOException {
         String[] header = br.readLine().split(" ");
@@ -46,7 +44,7 @@ public class HttpRequestParser {
         return header.get(key);
     }
 
-    private void parse() {
+    private void parse(BufferedReader br) {
         try {
             String line;
             while ((line = br.readLine()).length() != 0) {
