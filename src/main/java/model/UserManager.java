@@ -15,7 +15,7 @@ public class UserManager {
     private static Logger log = LoggerFactory.getLogger(UserManager.class);
 
     public static boolean signIn(BufferedReader br) throws IOException {
-        Map<String, String> parameters = HttpRequestUtils.parseQueryString(new HttpRequestParser(br).bodyOf(br));
+        Map<String, String> parameters = HttpRequestUtils.parseQueryString(new HttpRequestParser(br).getBody());
         log.debug(parameters.get("userId") + " " + parameters.get("password"));
         try {
             return Objects.equals(DataBase.findUserById(parameters.get("userId")).getPassword()
@@ -26,7 +26,7 @@ public class UserManager {
     }
 
     public static void create(BufferedReader br) throws IOException {
-        Map<String, String> parameters = HttpRequestUtils.parseQueryString(new HttpRequestParser(br).bodyOf(br));
+        Map<String, String> parameters = HttpRequestUtils.parseQueryString(new HttpRequestParser(br).getBody());
         DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));
         log.debug("ID: " + parameters.get("userId") + " made");
     }

@@ -13,6 +13,7 @@ public class HttpRequestParser {
     private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
     private final BufferedReader br;
     private Map<String, String> header = new HashMap<>();
+    private String body;
 
     public HttpRequestParser(BufferedReader br) {
         this.br = br;
@@ -27,8 +28,7 @@ public class HttpRequestParser {
     }
 
     public String bodyOf(BufferedReader br) throws IOException {
-        int contentLen = contentLengthOf(br);
-        while (br.readLine().length() > 0) ;
+        int contentLen = Integer.parseInt(header.get("Content-Length"));
         return IOUtils.readData(br, contentLen);
     }
 
@@ -53,6 +53,7 @@ public class HttpRequestParser {
                 header.put(HttpRequestUtils.parseHeader(line).getKey()
                         , HttpRequestUtils.parseHeader(line).getValue());
             }
+            this.body = bodyOf(br);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,5 +70,9 @@ public class HttpRequestParser {
             }
         }
         return false;
+    }
+
+    public String getBody() {
+        return body;
     }
 }
