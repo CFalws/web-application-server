@@ -13,6 +13,8 @@ public class ResponseRenderer {
     private static final String DEFAULT_PATH = "/index.html";
     private static final String HOST = "http://localhost:8080";
     private static final String WEBAPP_PATH = "./webapp";
+    private static final String LOGIN_FAIL_PATH = "/user/login_failed.html"
+            ;
     private BufferedReader request;
     private DataOutputStream response;
     public ResponseRenderer(BufferedReader request, DataOutputStream response) {
@@ -30,7 +32,7 @@ public class ResponseRenderer {
                 break;
             case "/user/login":
                 if (UserManager.signIn(requestParser)) resp302SignInSuccess(DEFAULT_PATH, true);
-                else resp302SignInSuccess("/user/login_failed.html", false);
+                else resp302SignInSuccess(LOGIN_FAIL_PATH, false);
                 break;
             case "/user/list":
                 if (requestParser.isSignedIn()) resp200AllUser();
