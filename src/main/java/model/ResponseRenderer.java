@@ -26,15 +26,15 @@ public class ResponseRenderer {
         switch (resourcePath) {
             case "/user/create":
                 UserManager.create(requestParser);
-                resp302(HOST + DEFAULT_PATH);
+                resp302(DEFAULT_PATH);
                 break;
             case "/user/login":
-                if (UserManager.signIn(requestParser)) resp302SignInSuccess(HOST + DEFAULT_PATH, true);
-                else resp302SignInSuccess(HOST + "/user/login_failed.html", false);
+                if (UserManager.signIn(requestParser)) resp302SignInSuccess(DEFAULT_PATH, true);
+                else resp302SignInSuccess("/user/login_failed.html", false);
                 break;
             case "/user/list":
                 if (requestParser.isSignedIn()) resp200AllUser();
-                else resp302(HOST + "/user/login.html");
+                else resp302("/user/login.html");
                 break;
             default:
                 resp200(resourcePath);
