@@ -11,10 +11,9 @@ import java.nio.file.Files;
 
 public class ResponseRenderer {
     private static final String DEFAULT_PATH = "/index.html";
-    private static final String HOST = "http://localhost:8080";
     private static final String WEBAPP_PATH = "./webapp";
-    private static final String LOGIN_FAIL_PATH = "/user/login_failed.html"
-            ;
+    private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
+    private static final String LOGIN_PATH = "/user/login.html";
     private BufferedReader request;
     private DataOutputStream response;
     public ResponseRenderer(BufferedReader request, DataOutputStream response) {
@@ -36,7 +35,7 @@ public class ResponseRenderer {
                 break;
             case "/user/list":
                 if (requestParser.isSignedIn()) resp200AllUser();
-                else resp302("/user/login.html");
+                else resp302(LOGIN_PATH);
                 break;
             default:
                 resp200(resourcePath);
@@ -55,8 +54,8 @@ public class ResponseRenderer {
     }
 
     private void resp200AllUser() throws IOException {
-        response.writeBytes("HTTP/1.1 200 OK \r\n");
         byte[] body = DataBase.findAll().toString().getBytes();
+        response.writeBytes("HTTP/1.1 200 OK \r\n");
         response.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
         response.writeBytes("Content-Length: " + body.length + "\r\n");
         response.writeBytes("\r\n");
@@ -65,8 +64,8 @@ public class ResponseRenderer {
 
 
     private void resp200(String path) throws IOException {
-        response.writeBytes("HTTP/1.1 200 OK \r\n");
         byte[] body = getBytes(path);
+        response.writeBytes("HTTP/1.1 200 OK \r\n");
         response.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
         response.writeBytes("Content-Length: " + body.length + "\r\n");
         response.writeBytes("\r\n");
@@ -75,7 +74,7 @@ public class ResponseRenderer {
 
     private byte[] getBytes(String path) throws IOException {
         if (path.equals("/")) {
-            path = "/index.html";
+            path = DEFAULT_PATH;
         }
         return Files.readAllBytes(new File(WEBAPP_PATH + path).toPath());
     }
