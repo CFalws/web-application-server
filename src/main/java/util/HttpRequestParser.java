@@ -22,7 +22,7 @@ public class HttpRequestParser {
     }
     private void requestLine(BufferedReader request) throws IOException {
         String[] reqLine = request.readLine().split(" ");
-        if (!Objects.equals(reqLine[1].substring(0, 1), "/"))
+        if (reqLine.length != 3)
             throw new IllegalArgumentException();
         method = reqLine[0];
         String[] pathAndParam = reqLine[1].split("\\?");
@@ -74,7 +74,7 @@ public class HttpRequestParser {
         return method;
     }
 
-    public String getResourcePath() {
+    public String getPath() {
         return path;
     }
 

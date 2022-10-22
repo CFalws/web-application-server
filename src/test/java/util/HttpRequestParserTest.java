@@ -35,7 +35,7 @@ public class HttpRequestParserTest {
                     new BufferedReader(new InputStreamReader(in)));
 
             assertThat("GET").isEqualTo(parser.getMethod());
-            assertThat("/user/create").isEqualTo(parser.getResourcePath());
+            assertThat("/user/create").isEqualTo(parser.getPath());
             assertThat("keep-alive").isEqualTo(parser.getHeader("Connection"));
             assertThat("javajigi").isEqualTo(parser.getParameters("userId"));
 
@@ -55,7 +55,7 @@ public class HttpRequestParserTest {
                     new BufferedReader(new InputStreamReader(in)));
 
             assertThat("POST").isEqualTo(parser.getMethod());
-            assertThat("/user/create").isEqualTo(parser.getResourcePath());
+            assertThat("/user/create").isEqualTo(parser.getPath());
             assertThat("keep-alive").isEqualTo(parser.getHeader("Connection"));
             assertThat("javajigi").isEqualTo(parser.getParameters("userId"));
 

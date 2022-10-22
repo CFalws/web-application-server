@@ -23,7 +23,7 @@ public class ResponseRenderer {
 
     public void render() throws IOException {
         HttpRequestParser requestParser = new HttpRequestParser(request);
-        String resourcePath = requestParser.getResourcePath();
+        String resourcePath = requestParser.getPath();
         switch (resourcePath) {
             case "/user/create":
                 UserManager.create(requestParser);
