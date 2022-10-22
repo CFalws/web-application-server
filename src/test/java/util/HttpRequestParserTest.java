@@ -9,7 +9,7 @@ import java.io.StringReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpRequestTest {
+public class HttpRequestParserTest {
     @Test
     public void header() {
         BufferedReader br = new BufferedReader(new StringReader(
@@ -17,7 +17,7 @@ public class HttpRequestTest {
                 + "Cookie: logined=true\r\n"
                 + "\r\nHello world: 14"
         ));
-        HttpRequest parser = new HttpRequest(br);
+        HttpRequestParser parser = new HttpRequestParser(br);
         try {
             assertThat(parser.header("Content-Length")).isEqualTo("15");
             assertThat(parser.header("Cookie")).isEqualTo("logined=true");

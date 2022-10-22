@@ -9,20 +9,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class HttpRequest {
-    private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
+public class HttpRequestParser {
+    private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
+    private String method;
     private String path;
     private Map<String, String> header = new HashMap<>();
     private String body;
 
-    public HttpRequest(BufferedReader request) {
+    public HttpRequestParser(BufferedReader request) {
         parse(request);
     }
     private void requestLine(BufferedReader request) throws IOException {
         String[] reqLine = request.readLine().split(" ");
         if (!Objects.equals(reqLine[1].substring(0, 1), "/"))
             throw new IllegalArgumentException();
-        log.debug(reqLine[1]);
+        method = reqLine[0];
         path = reqLine[1];
     }
 
