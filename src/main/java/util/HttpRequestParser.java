@@ -15,6 +15,7 @@ public class HttpRequestParser {
     private String path;
     private Map<String, String> header = new HashMap<>();
     private String body;
+    private Map<String, String> parameters;
 
     public HttpRequestParser(BufferedReader request) {
         parse(request);
@@ -38,6 +39,7 @@ public class HttpRequestParser {
     private void body(BufferedReader request) throws IOException {
         try {
             body = IOUtils.readData(request, Integer.parseInt(header.get("Content-Length")));
+            parameters = HttpRequestUtils.parseQueryString(body);
         } catch (NumberFormatException e) {
             // do nothing
             log.debug("NumberFormat Exception!~~!");
@@ -74,5 +76,9 @@ public class HttpRequestParser {
 
     public String getBody() {
         return body;
+    }
+
+    public String getParameters(String key) {
+        return parameters.get(key);
     }
 }
