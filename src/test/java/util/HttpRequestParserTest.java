@@ -12,7 +12,8 @@ public class HttpRequestParserTest {
     @Test
     public void header() {
         BufferedReader br = new BufferedReader(new StringReader(
-                "Content-Length: 15\r\n"
+                "GET /user/create HTTP/1.1\r\n"
+                        + "Content-Length: 15\r\n"
                         + "Cookie: logined=true\r\n"
                         + "\r\nHello world: 14"
         ));
@@ -27,13 +28,33 @@ public class HttpRequestParserTest {
     }
 
     @Test
-    public void parsingTest() {
+    public void getTest() {
         try {
             InputStream in = new FileInputStream(new File(dir + "Http_Get.txt"));
             HttpRequestParser parser = new HttpRequestParser(
                     new BufferedReader(new InputStreamReader(in)));
 
             assertThat("GET").isEqualTo(parser.getMethod());
+            assertThat("/user/create").isEqualTo(parser.getResourcePath());
+            assertThat("keep-alive").isEqualTo(parser.getHeader("Connection"));
+            assertThat("javajigi").isEqualTo(parser.getParameters("userId"));
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test
+    public void postTest() {
+        try {
+            InputStream in = new FileInputStream(new File(dir + "Http_POST.txt"));
+            HttpRequestParser parser = new HttpRequestParser(
+                    new BufferedReader(new InputStreamReader(in)));
+
+            assertThat("POST").isEqualTo(parser.getMethod());
             assertThat("/user/create").isEqualTo(parser.getResourcePath());
             assertThat("keep-alive").isEqualTo(parser.getHeader("Connection"));
             assertThat("javajigi").isEqualTo(parser.getParameters("userId"));

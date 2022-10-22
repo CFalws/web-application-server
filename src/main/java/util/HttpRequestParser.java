@@ -27,7 +27,8 @@ public class HttpRequestParser {
         method = reqLine[0];
         String[] pathAndParam = reqLine[1].split("\\?");
         path = pathAndParam[0];
-        parameters = HttpRequestUtils.parseQueryString(pathAndParam[1]);
+        if (pathAndParam.length > 1)
+            parameters = HttpRequestUtils.parseQueryString(pathAndParam[1]);
     }
 
     private void header(BufferedReader request) throws IOException {
