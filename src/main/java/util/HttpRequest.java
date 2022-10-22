@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class HttpRequestParser {
-    private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
+public class HttpRequest {
+    private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
     private String path;
     private Map<String, String> header = new HashMap<>();
     private String body;
 
-    public HttpRequestParser(BufferedReader request) {
+    public HttpRequest(BufferedReader request) {
         parse(request);
     }
     private void requestLine(BufferedReader request) throws IOException {

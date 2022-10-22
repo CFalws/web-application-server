@@ -1,7 +1,7 @@
 package model;
 
 import db.DataBase;
-import util.HttpRequestParser;
+import util.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -22,7 +22,7 @@ public class ResponseRenderer {
     }
 
     public void render() throws IOException {
-        HttpRequestParser requestParser = new HttpRequestParser(request);
+        HttpRequest requestParser = new HttpRequest(request);
         String resourcePath = requestParser.resourcePath();
         switch (resourcePath) {
             case "/user/create":
