@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import util.HttpRequestUtils.Pair;
 
-public class HttpRequestParserUtilsTest {
+public class HttpRequestUtilsTest {
     @Test
     public void parseQueryString() {
         String queryString = "userId=javajigi";

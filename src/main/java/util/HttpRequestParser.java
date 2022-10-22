@@ -64,15 +64,15 @@ public class HttpRequestParser {
         return false;
     }
 
-    public String resourcePath() {
+    public String getResourcePath() {
         return path;
     }
 
-    public String header(String key) throws IOException {
+    public String getHeader(String key) throws IOException {
         return header.get(key);
     }
 
-    public String body() {
+    public String getBody() {
         return body;
     }
 }
