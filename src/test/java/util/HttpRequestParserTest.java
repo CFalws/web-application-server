@@ -3,19 +3,18 @@ package util;
 
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpRequestParserTest {
+    private String dir = "./src/test/resources/";
     @Test
     public void header() {
         BufferedReader br = new BufferedReader(new StringReader(
                 "Content-Length: 15\r\n"
-                + "Cookie: logined=true\r\n"
-                + "\r\nHello world: 14"
+                        + "Cookie: logined=true\r\n"
+                        + "\r\nHello world: 14"
         ));
         HttpRequestParser parser = new HttpRequestParser(br);
         try {
@@ -25,5 +24,25 @@ public class HttpRequestParserTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void parsingTest() {
+        try {
+            InputStream in = new FileInputStream(new File(dir + "Http_Get.txt"));
+            HttpRequestParser parser = new HttpRequestParser(
+                    new BufferedReader(new InputStreamReader(in)));
+
+            assertThat("GET").isEqualTo(parser.getMethod());
+            assertThat("/user/create").isEqualTo(parser.getResourcePath());
+            assertThat("keep-alive").isEqualTo(parser.getHeader("Connection"));
+            assertThat("javajigi").isEqualTo(parser.getParameters("userId"));
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
