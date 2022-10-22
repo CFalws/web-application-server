@@ -25,12 +25,15 @@ public class HttpRequestParser {
         if (!Objects.equals(reqLine[1].substring(0, 1), "/"))
             throw new IllegalArgumentException();
         method = reqLine[0];
-        path = reqLine[1];
+        String[] pathAndParam = reqLine[1].split("\\?");
+        path = pathAndParam[0];
+        parameters = HttpRequestUtils.parseQueryString(pathAndParam[1]);
     }
 
     private void header(BufferedReader request) throws IOException {
         String line;
         while ((line = request.readLine()).length() != 0) {
+            log.debug(line);
             header.put(HttpRequestUtils.parseHeader(line).getKey()
                     , HttpRequestUtils.parseHeader(line).getValue());
         }
@@ -64,6 +67,10 @@ public class HttpRequestParser {
                     .parseBoolean(HttpRequestUtils.parseCookies(cookie).get("logined"));
         }
         return false;
+    }
+
+    public String getMethod() {
+        return method;
     }
 
     public String getResourcePath() {
