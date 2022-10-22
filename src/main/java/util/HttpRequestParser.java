@@ -82,10 +82,6 @@ public class HttpRequestParser {
         return header.get(key);
     }
 
-    public String getBody() {
-        return body;
-    }
-
     public String getParameters(String key) {
         return parameters.get(key);
     }

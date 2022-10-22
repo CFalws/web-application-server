@@ -14,19 +14,20 @@ public class UserManager {
     private static Logger log = LoggerFactory.getLogger(UserManager.class);
 
     public static boolean signIn(HttpRequestParser requestParser) throws IOException {
-        Map<String, String> parameters = HttpRequestUtils.parseQueryString(requestParser.getBody());
-        log.debug(parameters.get("userId") + " " + parameters.get("password"));
+        log.debug(requestParser.getParameters("userId") + " " + requestParser.getParameters("password"));
         try {
-            return Objects.equals(DataBase.findUserById(parameters.get("userId")).getPassword()
-                    , parameters.get("password"));
+            return Objects.equals(DataBase.findUserById(requestParser.getParameters("userId")).getPassword()
+                    , requestParser.getParameters("password"));
         } catch (NullPointerException e) {
             return false;
         }
     }
 
     public static void create(HttpRequestParser requestParser) throws IOException {
-        Map<String, String> parameters = HttpRequestUtils.parseQueryString(requestParser.getBody());
-        DataBase.addUser(new User(parameters.get("userId"), parameters.get("password"), parameters.get("name"), parameters.get("email")));
-        log.debug("ID: " + parameters.get("userId") + " made");
+        DataBase.addUser(new User(requestParser.getParameters("userId")
+                                , requestParser.getParameters("password")
+                                , requestParser.getParameters("name")
+                                , requestParser.getParameters("email")));
+        log.debug("ID: " + requestParser.getParameters("userId") + " made");
     }
 }
