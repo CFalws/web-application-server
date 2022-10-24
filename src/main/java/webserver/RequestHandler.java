@@ -27,7 +27,7 @@ public class RequestHandler extends Thread {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             HttpRequest request = new HttpRequest(new BufferedReader(new InputStreamReader(in)));
             HttpResponse response = new HttpResponse(new DataOutputStream(out));
-            response.render(request);
+//            response.render(request);
             Controller controller = Controller.getController(request.getPath());
             controller.service(request, response);
 

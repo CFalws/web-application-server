@@ -39,23 +39,23 @@ public class  HttpResponse {
         }
     }
 
-    private void signInSuccess(String location, Boolean success) throws IOException {
+    public void signInSuccess(String location, Boolean success) throws IOException {
         redirect(location);
         dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
     }
 
-    private void redirect(String location) throws IOException {
+    public void redirect(String location) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + location + "\r\n");
     }
 
-    private void list() throws IOException {
+    public void list() throws IOException {
         byte[] body = DataBase.findAll().toString().getBytes();
         forward(body);
     }
 
 
-    private void forward(String path) throws IOException {
+    public void forward(String path) throws IOException {
         byte[] body = getBytes(path);
         forward(body);
     }
