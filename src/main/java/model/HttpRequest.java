@@ -22,6 +22,17 @@ public class HttpRequest {
     public HttpRequest(BufferedReader bufferedReader) {
         parse(bufferedReader);
     }
+    private void parse(BufferedReader bufferedReader) {
+        try {
+            requestLine(bufferedReader);
+            header(bufferedReader);
+            body(bufferedReader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private void requestLine(BufferedReader bufferedReader) throws IOException {
         String[] reqLine = bufferedReader.readLine().split(" ");
         if (reqLine.length != 3)
@@ -50,17 +61,6 @@ public class HttpRequest {
             // do nothing
             log.debug("NumberFormat Exception!~~!");
         }
-    }
-
-    private void parse(BufferedReader bufferedReader) {
-        try {
-            requestLine(bufferedReader);
-            header(bufferedReader);
-            body(bufferedReader);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     public boolean isSignedIn() throws IOException {

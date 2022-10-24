@@ -1,6 +1,8 @@
-package model;
+package service;
 
 import db.DataBase;
+import model.HttpRequest;
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

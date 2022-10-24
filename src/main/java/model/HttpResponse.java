@@ -1,8 +1,8 @@
 package model;
 
 import db.DataBase;
+import service.UserService;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
