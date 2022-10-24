@@ -3,7 +3,7 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
-import model.ResponseRenderer;
+import model.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            new ResponseRenderer(new BufferedReader(new InputStreamReader(in))
+            new HttpResponse(new BufferedReader(new InputStreamReader(in))
                     , new DataOutputStream(out)).render();
         } catch (IOException e) {
             log.error(e.getMessage());

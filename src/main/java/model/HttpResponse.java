@@ -9,14 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class ResponseRenderer {
+public class HttpResponse {
     private static final String DEFAULT_PATH = "/index.html";
     private static final String WEBAPP_PATH = "./webapp";
     private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
     private static final String LOGIN_PATH = "/user/login.html";
     private BufferedReader bufferedReader;
     private DataOutputStream response;
-    public ResponseRenderer(BufferedReader bufferedReader, DataOutputStream response) {
+    public HttpResponse(BufferedReader bufferedReader, DataOutputStream response) {
         this.bufferedReader = bufferedReader;
         this.response = response;
     }
