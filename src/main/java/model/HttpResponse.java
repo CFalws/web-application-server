@@ -55,16 +55,16 @@ public class HttpResponse {
 
     private void resp200AllUser() throws IOException {
         byte[] body = DataBase.findAll().toString().getBytes();
-        dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + body.length + "\r\n");
-        dos.writeBytes("\r\n");
-        responseBody(body);
+        forward(body);
     }
 
 
     private void forward(String path) throws IOException {
         byte[] body = getBytes(path);
+        forward(body);
+    }
+
+    private void forward(byte[] body) throws IOException {
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
         dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
         dos.writeBytes("Content-Length: " + body.length + "\r\n");
