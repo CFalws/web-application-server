@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -27,10 +26,8 @@ public class RequestHandler extends Thread {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             HttpRequest request = new HttpRequest(new BufferedReader(new InputStreamReader(in)));
             HttpResponse response = new HttpResponse(new DataOutputStream(out));
-//            response.render(request);
-            Controller controller = Controller.getController(request.getPath());
-            controller.service(request, response);
 
+            Controller.getController(request.getPath()).service(request, response);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
