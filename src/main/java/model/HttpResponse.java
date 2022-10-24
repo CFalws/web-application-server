@@ -11,8 +11,6 @@ import java.nio.file.Files;
 public class  HttpResponse {
     private static final String DEFAULT_PATH = "/index.html";
     private static final String WEBAPP_PATH = "./webapp";
-    private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
-    private static final String LOGIN_PATH = "/user/login.html";
     private DataOutputStream dos;
     public HttpResponse(DataOutputStream dos) {
         this.dos = dos;
