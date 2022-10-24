@@ -30,20 +30,20 @@ public class HttpResponse {
                 redirect(DEFAULT_PATH);
                 break;
             case "/user/login":
-                if (UserManager.signIn(request)) resp302SignInSuccess(DEFAULT_PATH, true);
-                else resp302SignInSuccess(LOGIN_FAIL_PATH, false);
+                if (UserManager.signIn(request)) signInSuccess(DEFAULT_PATH, true);
+                else signInSuccess(LOGIN_FAIL_PATH, false);
                 break;
             case "/user/list":
                 if (request.isSignedIn()) resp200AllUser();
                 else redirect(LOGIN_PATH);
                 break;
             default:
-                resp200(resourcePath);
+                forward(resourcePath);
                 break;
         }
     }
 
-    private void resp302SignInSuccess(String location, Boolean success) throws IOException {
+    private void signInSuccess(String location, Boolean success) throws IOException {
         redirect(location);
         dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
     }
@@ -63,7 +63,7 @@ public class HttpResponse {
     }
 
 
-    private void resp200(String path) throws IOException {
+    private void forward(String path) throws IOException {
         byte[] body = getBytes(path);
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
         dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
