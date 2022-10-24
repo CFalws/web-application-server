@@ -1,7 +1,7 @@
 package model;
 
 import db.DataBase;
-import util.HttpRequestParser;
+import util.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -14,27 +14,27 @@ public class ResponseRenderer {
     private static final String WEBAPP_PATH = "./webapp";
     private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
     private static final String LOGIN_PATH = "/user/login.html";
-    private BufferedReader request;
+    private BufferedReader bufferedReader;
     private DataOutputStream response;
-    public ResponseRenderer(BufferedReader request, DataOutputStream response) {
-        this.request = request;
+    public ResponseRenderer(BufferedReader bufferedReader, DataOutputStream response) {
+        this.bufferedReader = bufferedReader;
         this.response = response;
     }
 
     public void render() throws IOException {
-        HttpRequestParser requestParser = new HttpRequestParser(request);
-        String resourcePath = requestParser.getPath();
+        HttpRequest request = new HttpRequest(bufferedReader);
+        String resourcePath = request.getPath();
         switch (resourcePath) {
             case "/user/create":
-                UserManager.create(requestParser);
+                UserManager.create(request);
                 resp302(DEFAULT_PATH);
                 break;
             case "/user/login":
-                if (UserManager.signIn(requestParser)) resp302SignInSuccess(DEFAULT_PATH, true);
+                if (UserManager.signIn(request)) resp302SignInSuccess(DEFAULT_PATH, true);
                 else resp302SignInSuccess(LOGIN_FAIL_PATH, false);
                 break;
             case "/user/list":
-                if (requestParser.isSignedIn()) resp200AllUser();
+                if (request.isSignedIn()) resp200AllUser();
                 else resp302(LOGIN_PATH);
                 break;
             default:

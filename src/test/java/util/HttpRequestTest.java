@@ -7,7 +7,7 @@ import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpRequestParserTest {
+public class HttpRequestTest {
     private String dir = "./src/test/resources/";
     @Test
     public void header() {
@@ -17,7 +17,7 @@ public class HttpRequestParserTest {
                         + "Cookie: logined=true\r\n"
                         + "\r\nHello world: 14"
         ));
-        HttpRequestParser parser = new HttpRequestParser(br);
+        HttpRequest parser = new HttpRequest(br);
         try {
             assertThat(parser.getHeader("Content-Length")).isEqualTo("15");
             assertThat(parser.getHeader("Cookie")).isEqualTo("logined=true");
@@ -31,7 +31,7 @@ public class HttpRequestParserTest {
     public void getTest() {
         try {
             InputStream in = new FileInputStream(new File(dir + "Http_Get.txt"));
-            HttpRequestParser parser = new HttpRequestParser(
+            HttpRequest parser = new HttpRequest(
                     new BufferedReader(new InputStreamReader(in)));
 
             assertThat("GET").isEqualTo(parser.getMethod());
@@ -51,7 +51,7 @@ public class HttpRequestParserTest {
     public void postTest() {
         try {
             InputStream in = new FileInputStream(new File(dir + "Http_POST.txt"));
-            HttpRequestParser parser = new HttpRequestParser(
+            HttpRequest parser = new HttpRequest(
                     new BufferedReader(new InputStreamReader(in)));
 
             assertThat("POST").isEqualTo(parser.getMethod());

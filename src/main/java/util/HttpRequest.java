@@ -9,19 +9,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class HttpRequestParser {
-    private static final Logger log = LoggerFactory.getLogger(HttpRequestParser.class);
+public class HttpRequest {
+    private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
     private String method;
     private String path;
     private Map<String, String> header = new HashMap<>();
     private String body;
     private Map<String, String> parameters;
 
-    public HttpRequestParser(BufferedReader request) {
-        parse(request);
+    public HttpRequest(BufferedReader bufferedReader) {
+        parse(bufferedReader);
     }
-    private void requestLine(BufferedReader request) throws IOException {
-        String[] reqLine = request.readLine().split(" ");
+    private void requestLine(BufferedReader bufferedReader) throws IOException {
+        String[] reqLine = bufferedReader.readLine().split(" ");
         if (reqLine.length != 3)
             throw new IllegalArgumentException();
         method = reqLine[0];
@@ -31,18 +31,18 @@ public class HttpRequestParser {
             parameters = HttpRequestUtils.parseQueryString(pathAndParam[1]);
     }
 
-    private void header(BufferedReader request) throws IOException {
+    private void header(BufferedReader bufferedReader) throws IOException {
         String line;
-        while ((line = request.readLine()).length() != 0) {
+        while ((line = bufferedReader.readLine()).length() != 0) {
             log.debug(line);
             header.put(HttpRequestUtils.parseHeader(line).getKey()
                     , HttpRequestUtils.parseHeader(line).getValue());
         }
     }
 
-    private void body(BufferedReader request) throws IOException {
+    private void body(BufferedReader bufferedReader) throws IOException {
         try {
-            body = IOUtils.readData(request, Integer.parseInt(header.get("Content-Length")));
+            body = IOUtils.readData(bufferedReader, Integer.parseInt(header.get("Content-Length")));
             parameters = HttpRequestUtils.parseQueryString(body);
         } catch (NumberFormatException e) {
             // do nothing
@@ -50,11 +50,11 @@ public class HttpRequestParser {
         }
     }
 
-    private void parse(BufferedReader request) {
+    private void parse(BufferedReader bufferedReader) {
         try {
-            requestLine(request);
-            header(request);
-            body(request);
+            requestLine(bufferedReader);
+            header(bufferedReader);
+            body(bufferedReader);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

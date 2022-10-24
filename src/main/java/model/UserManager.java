@@ -3,17 +3,15 @@ package model;
 import db.DataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestParser;
-import util.HttpRequestUtils;
+import util.HttpRequest;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 public class UserManager {
     private static Logger log = LoggerFactory.getLogger(UserManager.class);
 
-    public static boolean signIn(HttpRequestParser requestParser) throws IOException {
+    public static boolean signIn(HttpRequest requestParser) throws IOException {
         log.debug(requestParser.getParameters("userId") + " " + requestParser.getParameters("password"));
         try {
             return Objects.equals(DataBase.findUserById(requestParser.getParameters("userId")).getPassword()
@@ -23,7 +21,7 @@ public class UserManager {
         }
     }
 
-    public static void create(HttpRequestParser requestParser) throws IOException {
+    public static void create(HttpRequest requestParser) throws IOException {
         DataBase.addUser(new User(requestParser.getParameters("userId")
                                 , requestParser.getParameters("password")
                                 , requestParser.getParameters("name")
