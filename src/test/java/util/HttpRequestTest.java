@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HttpRequestTest {
     private String dir = "./src/test/resources/";
     @Test
-    public void header() {
+    public void header() throws IOException {
         BufferedReader br = new BufferedReader(new StringReader(
                 "GET /user/create HTTP/1.1\r\n"
                         + "Content-Length: 15\r\n"

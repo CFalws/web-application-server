@@ -27,17 +27,21 @@ public class  HttpResponse {
 
     public void forward(String path) throws IOException {
         byte[] body = getBytes(path);
+        if (path.endsWith(".css")) {
+            addHeader("Content-Type", "text/css");
+        } else if (path.endsWith(".js")) {
+            addHeader("Content-Type", "application/javascript");
+        } else {
+            addHeader("Content-Type", "text/html;charset=utf-8");
+        }
+        addHeader("Content-Length", String.valueOf(body.length));
+
         forward(body);
     }
 
     public void forward(byte[] body) throws IOException {
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + body.length + "\r\n");
-        for (Map.Entry<String, String> entry : header.entrySet()) {
-            dos.writeBytes(entry.getKey() + ": " + entry.getValue());
-            dos.writeBytes("\r\n");
-        }
+        writeHeader();
         dos.writeBytes("\r\n");
         responseBody(body);
     }
@@ -45,11 +49,15 @@ public class  HttpResponse {
     public void redirect(String location) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + location + "\r\n");
+        writeHeader();
+        dos.writeBytes("\r\n");
+    }
+
+    private void writeHeader() throws IOException {
         for (Map.Entry<String, String> entry : header.entrySet()) {
             dos.writeBytes(entry.getKey() + ": " + entry.getValue());
             dos.writeBytes("\r\n");
         }
-        dos.writeBytes("\r\n");
     }
 
     private byte[] getBytes(String path) throws IOException {

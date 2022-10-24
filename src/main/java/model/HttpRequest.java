@@ -19,24 +19,18 @@ public class HttpRequest {
     private String body;
     private Map<String, String> parameters;
 
-    public HttpRequest(BufferedReader bufferedReader) {
+    public HttpRequest(BufferedReader bufferedReader) throws IOException {
         parse(bufferedReader);
     }
-    private void parse(BufferedReader bufferedReader) {
-        try {
-            requestLine(bufferedReader);
-            header(bufferedReader);
-            body(bufferedReader);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+    private void parse(BufferedReader bufferedReader) throws IOException {
+        requestLine(bufferedReader);
+        header(bufferedReader);
+        body(bufferedReader);
     }
 
     private void requestLine(BufferedReader bufferedReader) throws IOException {
         String[] reqLine = bufferedReader.readLine().split(" ");
-        if (reqLine.length != 3)
-            throw new IllegalArgumentException();
+
         method = reqLine[0];
         String[] pathAndParam = reqLine[1].split("\\?");
         path = pathAndParam[0];
@@ -47,7 +41,6 @@ public class HttpRequest {
     private void header(BufferedReader bufferedReader) throws IOException {
         String line;
         while ((line = bufferedReader.readLine()).length() != 0) {
-            log.debug(line);
             header.put(HttpRequestUtils.parseHeader(line).getKey()
                     , HttpRequestUtils.parseHeader(line).getValue());
         }
@@ -59,15 +52,14 @@ public class HttpRequest {
             parameters = HttpRequestUtils.parseQueryString(body);
         } catch (NumberFormatException e) {
             // do nothing
-            log.debug("NumberFormat Exception!~~!");
+            log.debug("empty body");
         }
     }
 
     public boolean isSignedIn() throws IOException {
         String cookie = header.get("Cookie");
         if (Objects.nonNull(cookie)) {
-            return Boolean
-                    .parseBoolean(HttpRequestUtils.parseCookies(cookie).get("logined"));
+            return Boolean.parseBoolean(HttpRequestUtils.parseCookies(cookie).get("logined"));
         }
         return false;
     }
