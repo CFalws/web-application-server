@@ -1,9 +1,12 @@
 package controller;
 
+import model.HttpRequest;
+import model.HttpResponse;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class Controller {
+public abstract class Controller {
     private static Map<String, Controller> controllers = new HashMap<>();
 
     static {
@@ -16,4 +19,6 @@ public class Controller {
     public static Controller getController(String path) {
         return controllers.get(path);
     }
+
+    abstract public void service(HttpRequest request, HttpResponse response);
 }

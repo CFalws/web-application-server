@@ -3,6 +3,7 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 
+import controller.Controller;
 import model.HttpRequest;
 import model.HttpResponse;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ public class RequestHandler extends Thread {
             HttpRequest request = new HttpRequest(new BufferedReader(new InputStreamReader(in)));
             HttpResponse response = new HttpResponse(new DataOutputStream(out));
             response.render(request);
+            Controller controller = Controller.getController(request.getPath());
+            controller.service(request, response);
 
         } catch (IOException e) {
             log.error(e.getMessage());
