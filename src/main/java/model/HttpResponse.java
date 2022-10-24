@@ -15,10 +15,10 @@ public class HttpResponse {
     private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
     private static final String LOGIN_PATH = "/user/login.html";
     private BufferedReader bufferedReader;
-    private DataOutputStream response;
-    public HttpResponse(BufferedReader bufferedReader, DataOutputStream response) {
+    private DataOutputStream dos;
+    public HttpResponse(BufferedReader bufferedReader, DataOutputStream dos) {
         this.bufferedReader = bufferedReader;
-        this.response = response;
+        this.dos = dos;
     }
 
     public void render() throws IOException {
@@ -27,7 +27,7 @@ public class HttpResponse {
         switch (resourcePath) {
             case "/user/create":
                 UserManager.create(request);
-                resp302(DEFAULT_PATH);
+                redirect(DEFAULT_PATH);
                 break;
             case "/user/login":
                 if (UserManager.signIn(request)) resp302SignInSuccess(DEFAULT_PATH, true);
@@ -35,7 +35,7 @@ public class HttpResponse {
                 break;
             case "/user/list":
                 if (request.isSignedIn()) resp200AllUser();
-                else resp302(LOGIN_PATH);
+                else redirect(LOGIN_PATH);
                 break;
             default:
                 resp200(resourcePath);
@@ -44,31 +44,31 @@ public class HttpResponse {
     }
 
     private void resp302SignInSuccess(String location, Boolean success) throws IOException {
-        resp302(location);
-        response.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
+        redirect(location);
+        dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
     }
 
-    private void resp302(String location) throws IOException {
-        response.writeBytes("HTTP/1.1 302 Found \r\n");
-        response.writeBytes("Location: " + location + "\r\n");
+    private void redirect(String location) throws IOException {
+        dos.writeBytes("HTTP/1.1 302 Found \r\n");
+        dos.writeBytes("Location: " + location + "\r\n");
     }
 
     private void resp200AllUser() throws IOException {
         byte[] body = DataBase.findAll().toString().getBytes();
-        response.writeBytes("HTTP/1.1 200 OK \r\n");
-        response.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        response.writeBytes("Content-Length: " + body.length + "\r\n");
-        response.writeBytes("\r\n");
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        dos.writeBytes("\r\n");
         responseBody(body);
     }
 
 
     private void resp200(String path) throws IOException {
         byte[] body = getBytes(path);
-        response.writeBytes("HTTP/1.1 200 OK \r\n");
-        response.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        response.writeBytes("Content-Length: " + body.length + "\r\n");
-        response.writeBytes("\r\n");
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        dos.writeBytes("\r\n");
         responseBody(body);
     }
 
@@ -80,7 +80,7 @@ public class HttpResponse {
     }
 
     private void responseBody(byte[] body) throws IOException {
-        response.write(body, 0, body.length);
-        response.flush();
+        dos.write(body, 0, body.length);
+        dos.flush();
     }
 }
