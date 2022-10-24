@@ -34,7 +34,7 @@ public class HttpResponse {
                 else signInSuccess(LOGIN_FAIL_PATH, false);
                 break;
             case "/user/list":
-                if (request.isSignedIn()) resp200AllUser();
+                if (request.isSignedIn()) list();
                 else redirect(LOGIN_PATH);
                 break;
             default:
@@ -53,7 +53,7 @@ public class HttpResponse {
         dos.writeBytes("Location: " + location + "\r\n");
     }
 
-    private void resp200AllUser() throws IOException {
+    private void list() throws IOException {
         byte[] body = DataBase.findAll().toString().getBytes();
         forward(body);
     }
