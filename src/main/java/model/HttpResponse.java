@@ -1,7 +1,6 @@
 package model;
 
 import db.DataBase;
-import util.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -14,15 +13,12 @@ public class HttpResponse {
     private static final String WEBAPP_PATH = "./webapp";
     private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
     private static final String LOGIN_PATH = "/user/login.html";
-    private BufferedReader bufferedReader;
     private DataOutputStream dos;
-    public HttpResponse(BufferedReader bufferedReader, DataOutputStream dos) {
-        this.bufferedReader = bufferedReader;
+    public HttpResponse(DataOutputStream dos) {
         this.dos = dos;
     }
 
-    public void render() throws IOException {
-        HttpRequest request = new HttpRequest(bufferedReader);
+    public void render(HttpRequest request) throws IOException {
         String resourcePath = request.getPath();
         switch (resourcePath) {
             case "/user/create":

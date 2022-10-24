@@ -1,6 +1,7 @@
 package util;
 
 
+import model.HttpRequest;
 import org.junit.Test;
 
 import java.io.*;
