@@ -7,13 +7,22 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class  HttpResponse {
     private static final String DEFAULT_PATH = "/index.html";
     private static final String WEBAPP_PATH = "./webapp";
     private DataOutputStream dos;
+    private Map<String, String> header = new HashMap<>();
     public HttpResponse(DataOutputStream dos) {
         this.dos = dos;
+    }
+
+    public void addHeader(String key, String value) {
+        if (Objects.isNull(key) || Objects.isNull(value)) throw new NullPointerException();
+        header.put(key, value);
     }
 
     public void forward(String path) throws IOException {
