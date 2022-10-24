@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class HttpResponse {
+public class  HttpResponse {
     private static final String DEFAULT_PATH = "/index.html";
     private static final String WEBAPP_PATH = "./webapp";
     private static final String LOGIN_FAIL_PATH = "/user/login_failed.html";
