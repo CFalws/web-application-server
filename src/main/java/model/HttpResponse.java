@@ -18,27 +18,6 @@ public class  HttpResponse {
         this.dos = dos;
     }
 
-    public void render(HttpRequest request) throws IOException {
-        String resourcePath = request.getPath();
-        switch (resourcePath) {
-            case "/user/create":
-                UserService.create(request);
-                redirect(DEFAULT_PATH);
-                break;
-            case "/user/login":
-                if (UserService.signIn(request)) signInSuccess(DEFAULT_PATH, true);
-                else signInSuccess(LOGIN_FAIL_PATH, false);
-                break;
-            case "/user/list":
-                if (request.isSignedIn()) list();
-                else redirect(LOGIN_PATH);
-                break;
-            default:
-                forward(resourcePath);
-                break;
-        }
-    }
-
     public void signInSuccess(String location, Boolean success) throws IOException {
         redirect(location);
         dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
