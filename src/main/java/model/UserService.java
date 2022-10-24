@@ -8,8 +8,8 @@ import util.HttpRequest;
 import java.io.IOException;
 import java.util.Objects;
 
-public class UserManager {
-    private static Logger log = LoggerFactory.getLogger(UserManager.class);
+public class UserService {
+    private static Logger log = LoggerFactory.getLogger(UserService.class);
 
     public static boolean signIn(HttpRequest requestParser) throws IOException {
         log.debug(requestParser.getParameters("userId") + " " + requestParser.getParameters("password"));

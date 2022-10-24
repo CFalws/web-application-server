@@ -26,11 +26,11 @@ public class HttpResponse {
         String resourcePath = request.getPath();
         switch (resourcePath) {
             case "/user/create":
-                UserManager.create(request);
+                UserService.create(request);
                 redirect(DEFAULT_PATH);
                 break;
             case "/user/login":
-                if (UserManager.signIn(request)) signInSuccess(DEFAULT_PATH, true);
+                if (UserService.signIn(request)) signInSuccess(DEFAULT_PATH, true);
                 else signInSuccess(LOGIN_FAIL_PATH, false);
                 break;
             case "/user/list":
