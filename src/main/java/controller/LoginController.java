@@ -9,7 +9,12 @@ import java.io.IOException;
 public class LoginController extends Controller {
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException {
-        if (UserService.signIn(request)) response.signInSuccess(DEFAULT_PATH, true);
-        else response.signInSuccess(LOGIN_FAIL_PATH, false);
+        if (UserService.signIn(request)){
+            response.addHeader("Set-Cookie", "logined=true");
+            response.redirect(DEFAULT_PATH);
+        } else {
+            response.addHeader("Set-Cookie", "logined=false");
+            response.redirect(LOGIN_FAIL_PATH);
+        }
     }
 }

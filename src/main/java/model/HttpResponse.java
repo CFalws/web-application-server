@@ -34,6 +34,10 @@ public class  HttpResponse {
         dos.writeBytes("HTTP/1.1 200 OK \r\n");
         dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
         dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        for (Map.Entry<String, String> entry : header.entrySet()) {
+            dos.writeBytes(entry.getKey() + ": " + entry.getValue());
+            dos.writeBytes("\r\n");
+        }
         dos.writeBytes("\r\n");
         responseBody(body);
     }
@@ -41,11 +45,11 @@ public class  HttpResponse {
     public void redirect(String location) throws IOException {
         dos.writeBytes("HTTP/1.1 302 Found \r\n");
         dos.writeBytes("Location: " + location + "\r\n");
-    }
-
-    public void signInSuccess(String location, Boolean success) throws IOException {
-        redirect(location);
-        dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
+        for (Map.Entry<String, String> entry : header.entrySet()) {
+            dos.writeBytes(entry.getKey() + ": " + entry.getValue());
+            dos.writeBytes("\r\n");
+        }
+        dos.writeBytes("\r\n");
     }
 
     private byte[] getBytes(String path) throws IOException {

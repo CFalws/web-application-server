@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class CreateController extends Controller {
 
-
     @Override
     public void service(HttpRequest request, HttpResponse response) throws IOException {
         UserService.create(request);
