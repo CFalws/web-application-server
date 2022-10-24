@@ -16,9 +16,17 @@ public class  HttpResponse {
         this.dos = dos;
     }
 
-    public void signInSuccess(String location, Boolean success) throws IOException {
-        redirect(location);
-        dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
+    public void forward(String path) throws IOException {
+        byte[] body = getBytes(path);
+        forward(body);
+    }
+
+    public void forward(byte[] body) throws IOException {
+        dos.writeBytes("HTTP/1.1 200 OK \r\n");
+        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+        dos.writeBytes("Content-Length: " + body.length + "\r\n");
+        dos.writeBytes("\r\n");
+        responseBody(body);
     }
 
     public void redirect(String location) throws IOException {
@@ -26,23 +34,9 @@ public class  HttpResponse {
         dos.writeBytes("Location: " + location + "\r\n");
     }
 
-    public void list() throws IOException {
-        byte[] body = DataBase.findAll().toString().getBytes();
-        forward(body);
-    }
-
-
-    public void forward(String path) throws IOException {
-        byte[] body = getBytes(path);
-        forward(body);
-    }
-
-    private void forward(byte[] body) throws IOException {
-        dos.writeBytes("HTTP/1.1 200 OK \r\n");
-        dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-        dos.writeBytes("Content-Length: " + body.length + "\r\n");
-        dos.writeBytes("\r\n");
-        responseBody(body);
+    public void signInSuccess(String location, Boolean success) throws IOException {
+        redirect(location);
+        dos.writeBytes("Set-Cookie: logined=" + String.valueOf(success) + "\r\n\r\n");
     }
 
     private byte[] getBytes(String path) throws IOException {
